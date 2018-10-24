@@ -43,12 +43,12 @@ public class GameController extends Constants {
 
         return new Move.Builder()
                 .from(new Coords.Builder()
-                        .x((byte)(Byte.parseByte(fromX) - 1))
-                        .y((byte)(Byte.parseByte(fromY) - 1))
+                        .x(Integer.parseInt(fromX) - 1)
+                        .y(Integer.parseInt(fromY) - 1)
                         .build())
                 .to(new Coords.Builder()
-                        .x((byte)(Byte.parseByte(toX) - 1))
-                        .y((byte)(Byte.parseByte(toY) - 1))
+                        .x(Integer.parseInt(toX) - 1)
+                        .y(Integer.parseInt(toY) - 1)
                         .build())
                 .build();
 

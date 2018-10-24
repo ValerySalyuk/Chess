@@ -25,16 +25,80 @@ public class Board extends Constants {
 
     public void makeMove(Move move) throws WrongFromFieldException {
 
-        Field from = board[move.from.x][move.from.y];
-
-        if (from.isEmpty() || from.getChessPiece().isWhite() != this.whiteTurn) {
-            throw new WrongFromFieldException("Wrong move. Try again");
-        } else {
+        if (validateMove(move)) {
             board[move.to.x][move.to.y] = board[move.from.x][move.from.y];
             board[move.from.x][move.from.y] = new Field();
 
             this.whiteTurn = !this.whiteTurn;
         }
+
+    }
+
+    private boolean validateMove(Move move) throws WrongFromFieldException {
+
+        Field from = board[move.from.x][move.from.y];
+
+        if (from.isEmpty()) {
+            throw new WrongFromFieldException("Can't move from empty place");
+        }
+
+        if (from.getChessPiece().isWhite() != this.whiteTurn) {
+            throw new WrongFromFieldException("It's " + (this.whiteTurn ? "white" : "black") + " turn");
+        }
+
+        if (move.from.x < 0 || move.from.y < 0 || move.from.x > 7 || move.from.y > 7
+                || move.to.x < 0 || move.to.y < 0 || move.to.x > 7 || move.to.y > 7) {
+            throw new WrongFromFieldException("Use coordinates from 1 to 8");
+        }
+
+        // Validation of piece move
+
+        ChessPiece chessPiece = board[move.from.x][move.from.y].getChessPiece();
+
+        // Validate Pawn move
+        if (chessPiece instanceof Pawn) {
+            boolean wrongMove = false;
+            if (move.to.y == move.from.y) {
+                if (this.whiteTurn) {
+                    if (move.from.x == 1) {
+                        if (move.to.x <= move.from.x || move.to.x > move.from.x + 2) {
+                            wrongMove = true;
+                        }
+                    } else if (move.to.x <= move.from.x || move.to.x > move.from.x + 1) {
+                        wrongMove = true;
+                    }
+                } else {
+                    if (move.from.x == 6) {
+                        if (move.to.x >= move.from.x || move.to.x > move.from.x - 2) {
+                            wrongMove = true;
+                        }
+                    } else if (move.to.x >= move.from.x || move.to.x > move.from.x - 1) {
+                        wrongMove = true;
+                    }
+                }
+            } else {
+                if (this.whiteTurn) {
+                    if ((move.to.x != move.from.x + 1)
+                            || (move.to.y > move.from.y + 1) || (move.to.y > move.from.y - 1)) {
+                        wrongMove = true;
+                    } else if (board[move.to.x][move.to.y].getChessPiece() == null
+                            || board[move.to.x][move.to.y].getChessPiece().isWhite() == this.whiteTurn) {
+                        wrongMove = true;
+                    }
+                } else {
+                    if ((move.to.x != move.from.x - 1)
+                            || (move.to.y > move.from.y + 1) || (move.to.y > move.from.y - 1)) {
+                        wrongMove = true;
+                    } else if (board[move.to.x][move.to.y].getChessPiece() == null
+                            || board[move.to.x][move.to.y].getChessPiece().isWhite() == this.whiteTurn) {
+                        wrongMove = true;
+                    }
+                }
+            }
+            if (wrongMove) throw new WrongFromFieldException("That's not a pawn move");
+        }
+
+        return true;
 
     }
 

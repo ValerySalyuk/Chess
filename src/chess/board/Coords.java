@@ -2,8 +2,8 @@ package chess.board;
 
 public class Coords {
 
-    public byte x;
-    public byte y;
+    public int x;
+    public int y;
 
     private Coords(Builder builder) {
         x = builder.x;
@@ -12,18 +12,18 @@ public class Coords {
 
 
     public static final class Builder {
-        private byte x;
-        private byte y;
+        private int x;
+        private int y;
 
         public Builder() {
         }
 
-        public Builder x(byte val) {
+        public Builder x(int val) {
             x = val;
             return this;
         }
 
-        public Builder y(byte val) {
+        public Builder y(int val) {
             y = val;
             return this;
         }
