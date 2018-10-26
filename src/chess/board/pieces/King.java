@@ -20,6 +20,8 @@ public class King extends ChessPiece {
 
     @Override
     public boolean checkTheoreticallyCorrect(Move move) {
-        return false;
+        int diffX = move.to.x - move.from.x;
+        int diffY = move.to.y - move.from.y;
+        return !(Math.abs(diffX) > 1 || Math.abs(diffY) > 1);
     }
 }
