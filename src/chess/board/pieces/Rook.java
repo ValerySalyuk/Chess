@@ -20,6 +20,8 @@ public class Rook extends ChessPiece {
 
     @Override
     public boolean checkTheoreticallyCorrect(Move move) {
-        return false;
+        int diffX = move.to.x - move.from.x;
+        int diffY = move.to.y - move.from.y;
+        return !(Math.abs(diffX) > 0 && Math.abs(diffY) > 0);
     }
 }
