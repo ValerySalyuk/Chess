@@ -132,8 +132,7 @@ public class Board extends Constants {
         final int leftCol = 1;
         final int rightCol = 6;
 
-        //board[0][leftCol] = new Field(new Knight(true));
-        board[3][3] = new Field(new Knight(true));
+        board[0][leftCol] = new Field(new Knight(true));
         board[0][rightCol] = new Field(new Knight(true));
         board[7][leftCol] = new Field(new Knight(false));
         board[7][rightCol] = new Field(new Knight(false));
