@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.board.*;
+import chess.board.exceptions.ChessException;
 
 import java.util.Scanner;
 
@@ -23,7 +24,7 @@ public class GameController extends Constants {
 
             try {
                 board.makeMove(move);
-            } catch (WrongFromFieldException e) {
+            } catch (ChessException e) {
                 System.out.println(e.errorMessage);
             }
 

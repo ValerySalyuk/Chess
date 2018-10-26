@@ -1,6 +1,9 @@
 package chess.board;
 
+import chess.board.exceptions.ChessException;
 import chess.board.pieces.*;
+
+import java.util.Optional;
 
 public class Board extends Constants {
 
@@ -23,83 +26,65 @@ public class Board extends Constants {
 
     }
 
-    public void makeMove(Move move) throws WrongFromFieldException {
+    public void makeMove(Move move) throws ChessException {
 
-        if (validateMove(move)) {
-            board[move.to.x][move.to.y] = board[move.from.x][move.from.y];
-            board[move.from.x][move.from.y] = new Field();
+        validateMove(move);
 
-            this.whiteTurn = !this.whiteTurn;
+        board[move.to.x][move.to.y] = board[move.from.x][move.from.y];
+        board[move.from.x][move.from.y] = new Field();
+
+        this.whiteTurn = !this.whiteTurn;
+
+
+    }
+
+    // 0. Coord in board
+    // 1. Empty
+    // 2. Own color
+    // 3. Check move theoretically correct
+    // 4. Context validation (not jump over, correctly eat other piece)
+    // 5. Check check (шах)
+
+    private void validateMove(Move move) throws ChessException {
+        if (!coordsInBoard(move)) {
+            throw new ChessException("Coordinates are outside of the board");
+        }
+
+        if (!pieceExists(move.from)) {
+            throw new ChessException("Nothing to move from empty field");
+        }
+
+        if (!pieceColorMatchTurn(move.from)) {
+            throw new ChessException("It's " + (this.whiteTurn ? "white" : "black") + " turn");
+        }
+
+        ChessPiece fromChessPiece = board[move.from.x][move.from.y].getChessPiece();
+        if (!fromChessPiece.checkTheoreticallyCorrect(move)) {
+            String pieceName = "";
+            if (fromChessPiece instanceof Pawn) pieceName = "pawn";
+            if (fromChessPiece instanceof Rook) pieceName = "rook";
+            if (fromChessPiece instanceof Knight) pieceName = "knight";
+            if (fromChessPiece instanceof Bishop) pieceName = "bishop";
+            if (fromChessPiece instanceof King) pieceName = "king";
+            if (fromChessPiece instanceof Queen) pieceName = "queen";
+            throw new ChessException("That's not " + pieceName +"'s move");
         }
 
     }
 
-    private boolean validateMove(Move move) throws WrongFromFieldException {
+    private boolean coordsInBoard(Move move) {
+        return move.from.x >= 0 && move.from.y >= 0 && move.from.x <= 7 && move.from.y <= 7
+                && move.to.x >= 0 && move.to.y >= 0 && move.to.x <= 7 && move.to.y <= 7;
+    }
 
-        Field from = board[move.from.x][move.from.y];
+    private boolean pieceExists(Coords from) {
+        Field field = board[from.x][from.y];
+        return !field.isEmpty();
+    }
 
-        if (from.isEmpty()) {
-            throw new WrongFromFieldException("Can't move from empty place");
-        }
-
-        if (from.getChessPiece().isWhite() != this.whiteTurn) {
-            throw new WrongFromFieldException("It's " + (this.whiteTurn ? "white" : "black") + " turn");
-        }
-
-        if (move.from.x < 0 || move.from.y < 0 || move.from.x > 7 || move.from.y > 7
-                || move.to.x < 0 || move.to.y < 0 || move.to.x > 7 || move.to.y > 7) {
-            throw new WrongFromFieldException("Use coordinates from 1 to 8");
-        }
-
-        // Validation of piece move
-
-        ChessPiece chessPiece = board[move.from.x][move.from.y].getChessPiece();
-
-        // Validate Pawn move
-        if (chessPiece instanceof Pawn) {
-            boolean wrongMove = false;
-            if (move.to.y == move.from.y) {
-                if (this.whiteTurn) {
-                    if (move.from.x == 1) {
-                        if (move.to.x <= move.from.x || move.to.x > move.from.x + 2) {
-                            wrongMove = true;
-                        }
-                    } else if (move.to.x <= move.from.x || move.to.x > move.from.x + 1) {
-                        wrongMove = true;
-                    }
-                } else {
-                    if (move.from.x == 6) {
-                        if (move.to.x >= move.from.x || move.to.x > move.from.x - 2) {
-                            wrongMove = true;
-                        }
-                    } else if (move.to.x >= move.from.x || move.to.x > move.from.x - 1) {
-                        wrongMove = true;
-                    }
-                }
-            } else {
-                if (this.whiteTurn) {
-                    if ((move.to.x != move.from.x + 1)
-                            || (move.to.y > move.from.y + 1) || (move.to.y > move.from.y - 1)) {
-                        wrongMove = true;
-                    } else if (board[move.to.x][move.to.y].getChessPiece() == null
-                            || board[move.to.x][move.to.y].getChessPiece().isWhite() == this.whiteTurn) {
-                        wrongMove = true;
-                    }
-                } else {
-                    if ((move.to.x != move.from.x - 1)
-                            || (move.to.y > move.from.y + 1) || (move.to.y > move.from.y - 1)) {
-                        wrongMove = true;
-                    } else if (board[move.to.x][move.to.y].getChessPiece() == null
-                            || board[move.to.x][move.to.y].getChessPiece().isWhite() == this.whiteTurn) {
-                        wrongMove = true;
-                    }
-                }
-            }
-            if (wrongMove) throw new WrongFromFieldException("That's not a pawn move");
-        }
-
-        return true;
-
+    private boolean pieceColorMatchTurn(Coords from) {
+        Field field = board[from.x][from.y];
+        return field.getChessPiece().isWhite() == this.whiteTurn;
     }
 
     public Field[][] getBoard() {

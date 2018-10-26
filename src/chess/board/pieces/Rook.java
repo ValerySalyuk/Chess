@@ -1,5 +1,7 @@
 package chess.board.pieces;
 
+import chess.board.Move;
+
 public class Rook extends ChessPiece {
 
     public Rook(boolean white) {
@@ -16,5 +18,8 @@ public class Rook extends ChessPiece {
         }
     }
 
-
+    @Override
+    public boolean checkTheoreticallyCorrect(Move move) {
+        return false;
+    }
 }

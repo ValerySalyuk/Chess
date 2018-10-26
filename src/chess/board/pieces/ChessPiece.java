@@ -1,5 +1,7 @@
 package chess.board.pieces;
 
+import chess.board.Move;
+
 public abstract class ChessPiece {
 
     protected boolean white;
@@ -11,6 +13,8 @@ public abstract class ChessPiece {
     public boolean isWhite() {
         return white;
     }
+
+    public abstract boolean checkTheoreticallyCorrect (Move move);
 
     @Override
     public abstract String toString();
