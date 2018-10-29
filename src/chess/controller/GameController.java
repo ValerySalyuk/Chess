@@ -24,11 +24,35 @@ public class GameController extends Constants {
 
             try {
                 board.makeMove(move);
+                if (board.gameOver()) {
+                    break;
+                }
             } catch (ChessException e) {
-                System.out.println(e.errorMessage);
+                System.out.println(e.getMessage());
             }
 
         }
+
+        GameStatus status = board.getStatus();
+
+        switch (status) {
+            case DRAW:
+                System.out.println("Draw");
+                break;
+            case BLACK_VICTORY:
+                System.out.println("Black wins!");
+                break;
+            case WHITE_VICTORY:
+                System.out.println("White wins!");
+                break;
+            case PAT_BLACK:
+                break;
+            case PAT_WHITE:
+                break;
+            default:
+                System.out.println("Error happened. Sorry");
+        }
+
     }
 
     private Move readPlayerMove() {

@@ -5,6 +5,8 @@ import chess.board.pieces.ChessPiece;
 public class Field {
 
     private ChessPiece chessPiece;
+    private boolean isUnderWhiteAttack;
+    private boolean isUnderBlackAttack;
 
     public Field(ChessPiece chessPiece) {
 
@@ -16,6 +18,14 @@ public class Field {
     }
 
     public Field() {
+    }
+
+    public void setUnderWhiteAttack() {
+        isUnderWhiteAttack = true;
+    }
+
+    public void setUnderBlackAttack() {
+        isUnderBlackAttack = true;
     }
 
     public boolean isEmpty() {
