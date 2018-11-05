@@ -5,7 +5,7 @@ public class Coords {
     public int x;
     public int y;
 
-    private Coords(Builder builder) {
+    public Coords(Builder builder) {
         x = builder.x;
         y = builder.y;
     }

@@ -15,6 +15,17 @@ public class Pawn extends ChessPiece {
         int diffY = move.to.y - move.from.y;
         int startX = isWhite() ? 1 : 6;
 
+        // Not moves backwards
+        if (isWhite()) {
+            if (move.to.x < move.from.x) {
+                return false;
+            }
+        } else {
+            if (move.to.x > move.from.x) {
+                return false;
+            }
+        }
+
         // Not moves forward or moves more than 2 fields forward
         if (Math.abs(diffX) < 1 || Math.abs(diffX) > 2) {
             return false;

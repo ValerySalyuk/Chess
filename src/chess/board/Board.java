@@ -37,7 +37,7 @@ public class Board extends Constants {
         board[move.to.x][move.to.y] = board[move.from.x][move.from.y];
         board[move.from.x][move.from.y] = new Field();
 
-        this.fillAttackPositions();
+        //this.fillAttackPositions();
 
         if (isKingUnderCheckMate()) {
             status = isWhiteTurn() ? GameStatus.WHITE_VICTORY : GameStatus.BLACK_VICTORY;
@@ -93,15 +93,15 @@ public class Board extends Constants {
             throw new ChessException("That's not " + pieceName +"'s move");
         }
 
-        if (! moveIsContextuallyValid(move)) {
-            throw new ChessException("");
-        }
+//        if (! moveIsContextuallyValid(move)) {
+//            throw new ChessException("");
+//        }
 
 //        this.fillAttackPositions();
 
-        if (check(move)) {
-            throw new ChessException("Check!");
-        }
+//        if (check(move)) {
+//            throw new ChessException("Check!");
+//        }
 
     }
 
@@ -110,8 +110,6 @@ public class Board extends Constants {
                 && validateCoordinate(move.from.y)
                 && validateCoordinate(move.to.x)
                 && validateCoordinate(move.to.y);
-//        return move.from.x >= 0 && move.from.y >= 0 && move.from.x <= 7 && move.from.y <= 7
-//                && move.to.x >= 0 && move.to.y >= 0 && move.to.x <= 7 && move.to.y <= 7;
     }
 
     private boolean validateCoordinate (int coordinate) {
